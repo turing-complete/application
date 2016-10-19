@@ -11,7 +11,7 @@ test:
 	@cd $(root)src && go test
 
 run: $(executable)
-	@./$(executable) -c $(executable).json
+	@./$(executable) -c $(executable).json -o $(executable).h5
 
 clean:
 	@rm -f $(executable)

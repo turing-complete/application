@@ -6,11 +6,13 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/ready-steady/hdf5"
 	"github.com/ready-steady/sequence"
 )
 
 var (
 	configPath = flag.String("c", "", "a configuration file (required)")
+	outputPath = flag.String("o", "", "an output file (required)")
 )
 
 func main() {
@@ -18,6 +20,9 @@ func main() {
 	flag.Parse()
 	if len(*configPath) == 0 {
 		abort(errors.New("expected a configuration file"))
+	}
+	if len(*outputPath) == 0 {
+		abort(errors.New("expected an output file"))
 	}
 	config, err := newConfig(*configPath)
 	if err != nil {
@@ -27,7 +32,21 @@ func main() {
 	algorithm := newAlgorithm(config)
 	surrogate := algorithm.Compute(target)
 	points := sequence.NewSobol(target.ni, config.Seed).Next(config.Samples)
-	_ = algorithm.Evaluate(surrogate, points)
+	values := algorithm.Evaluate(surrogate, points)
+	output, err := hdf5.Create(*outputPath)
+	if err != nil {
+		abort(err)
+	}
+	defer output.Close()
+	if err := output.Put("surrogate", *surrogate); err != nil {
+		abort(err)
+	}
+	if err := output.Put("points", points); err != nil {
+		abort(err)
+	}
+	if err := output.Put("values", values); err != nil {
+		abort(err)
+	}
 }
 
 func abort(err error) {

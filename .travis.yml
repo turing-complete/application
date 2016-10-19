@@ -6,6 +6,7 @@ go:
 
 install:
   - go get -d -t ./...
+  - (cd $GOPATH/src/github.com/ready-steady/hdf5 && make install)
 
 script:
   - make build
