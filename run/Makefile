@@ -3,15 +3,18 @@ root := $(dir $(shell pwd))
 executable := example
 dependencies := $(shell find $(root)src -name '*.go')
 
-all: $(executable)
-
-$(executable): $(dependencies)
-	@cd $(root)src/$(1) && go build -o $(root)run/$@
+build: $(executable)
 
 test:
 	@cd $(root)src && go test
 
+run: $(executable)
+	@./$(executable) -c $(executable).json
+
 clean:
 	@rm -f $(executable)
 
-.PHONY: all test clean
+$(executable): $(dependencies)
+	@cd $(root)src/$(1) && go build -o $(root)run/$@
+
+.PHONY: build test run clean
