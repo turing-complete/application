@@ -22,7 +22,7 @@ func newTarget(config *Config) (*Target, error) {
 		return nil, errors.New("expected a positive number of outputs")
 	}
 	if len(config.Command) == 0 {
-		return nil, errors.New("expected a command")
+		return nil, errors.New("expected a command name")
 	}
 	target := &Target{
 		ni:   config.Inputs,
@@ -35,7 +35,7 @@ func newTarget(config *Config) (*Target, error) {
 func (self *Target) evaluate(z []float64) ([]float64, error) {
 	inputs := make([]string, self.ni)
 	for i := uint(0); i < self.ni; i++ {
-		inputs[i] = fmt.Sprintf("%.15e", z[i])
+		inputs[i] = fmt.Sprintf("%e", z[i])
 	}
 	bytes, err := exec.Command(self.name, inputs...).Output()
 	if err != nil {
