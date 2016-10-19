@@ -37,8 +37,7 @@ func (self *Algorithm) Compute(target *Target) *Surrogate {
 			abort(err)
 		}
 	}
-	strategy := self.strategy()
 	return &Surrogate{
-		Surrogate: *self.Algorithm.Compute(compute, strategy),
+		Surrogate: *self.Algorithm.Compute(compute, self.strategy()),
 	}
 }
