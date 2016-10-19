@@ -15,26 +15,25 @@ func main() {
 	flag.Usage = usage
 	flag.Parse()
 	if len(*configPath) == 0 {
-		fail(errors.New("expected a configuration file"))
+		abort(errors.New("expected a configuration file"))
 	}
 	config, err := newConfig(*configPath)
 	if err != nil {
-		fail(err)
+		abort(err)
 	}
-	target, err := newTarget(config)
-	if err != nil {
-		fail(err)
-	}
-	target.evaluate(make([]float64, target.ni))
+	target := newTarget(config)
+	algorithm := newAlgorithm(config)
+	surrogate := algorithm.Compute(target)
+	fmt.Printf("Surrogate: %s\n", surrogate)
 }
 
-func fail(err error) {
+func abort(err error) {
 	fmt.Printf("Error: %s.\n", err)
 	os.Exit(1)
 }
 
 func usage() {
-	fmt.Printf("Usage: %s [options]\n\n", os.Args[0])
-	fmt.Printf("Options:\n")
+	fmt.Printf("Usage: %s [flags]\n\n", os.Args[0])
+	fmt.Printf("Flags:\n")
 	flag.PrintDefaults()
 }
