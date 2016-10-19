@@ -1,4 +1,4 @@
-# Example [![Build Status][travis-img]][travis-url]
+# Explorer [![Build Status][travis-img]][travis-url]
 
 ## Contribution
 
@@ -6,5 +6,5 @@
 2. Implement your idea.
 3. Open a pull request.
 
-[travis-img]: https://travis-ci.org/turing-complete/example.svg?branch=master
-[travis-url]: https://travis-ci.org/turing-complete/example
+[travis-img]: https://travis-ci.org/turing-complete/explorer.svg?branch=master
+[travis-url]: https://travis-ci.org/turing-complete/explorer

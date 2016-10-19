@@ -1,6 +1,6 @@
 root := $(dir $(shell pwd))
 
-executable := example
+executable := explorer
 dependencies := $(shell find $(root)src -name '*.go')
 
 export GOMAXPROCS=1
@@ -14,7 +14,7 @@ run: $(executable)
 	@./$(executable) -c $(executable).json -o $(executable).h5
 
 clean:
-	@rm -f $(executable)
+	@rm -f $(executable) *.h5
 
 $(executable): $(dependencies)
 	@cd $(root)src/$(1) && go build -o $(root)run/$@
