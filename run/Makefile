@@ -3,6 +3,8 @@ root := $(dir $(shell pwd))
 executable := example
 dependencies := $(shell find $(root)src -name '*.go')
 
+export GOMAXPROCS=1
+
 build: $(executable)
 
 test:
