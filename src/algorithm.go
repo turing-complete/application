@@ -32,8 +32,7 @@ func newAlgorithm(config *Config) *Algorithm {
 
 func (self *Algorithm) Compute(target *Target) *Surrogate {
 	compute := func(z, u []float64) {
-		err := target.Compute(z, u)
-		if err != nil {
+		if err := target.Compute(z, u); err != nil {
 			abort(err)
 		}
 	}
