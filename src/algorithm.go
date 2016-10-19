@@ -33,18 +33,24 @@ func newAlgorithm(config *Config) *Algorithm {
 }
 
 func (self *Algorithm) Compute(target *Target) *Surrogate {
-	log.Printf("[Algorithm] Start with %d input(s) and output %d (s).\n",
+	log.Printf("[Algorithm] Start constructing with %d input(s) and output %d (s).\n",
 		target.ni, target.no)
 	compute := func(z, u []float64) {
-		log.Printf("[Target] Start at node %v.\n", z)
+		log.Printf("[Target] Start computing at node %v.\n", z)
 		if err := target.Compute(z, u); err != nil {
 			abort(err)
 		}
-		log.Printf("[Target] Finish at node %v.\n", z)
+		log.Printf("[Target] Finish computing at node %v.\n", z)
 	}
 	surrogate := self.Algorithm.Compute(compute, self.strategy())
-	log.Printf("[Algorithm] Fisnih with %d node(s).\n", surrogate.Nodes)
-	return &Surrogate{
-		Surrogate: *surrogate,
-	}
+	log.Printf("[Algorithm] Finish constructing with %d node(s).\n", surrogate.Nodes)
+	return &Surrogate{*surrogate}
+}
+
+func (self *Algorithm) Evaluate(surrogate *Surrogate, points []float64) []float64 {
+	log.Printf("[Algorithm] Start evaluating at %d point(s).\n",
+		uint(len(points))/surrogate.Inputs)
+	values := self.Algorithm.Evaluate(&surrogate.Surrogate, points)
+	log.Printf("[Algorithm] Finish evaluating.\n")
+	return values
 }

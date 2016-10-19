@@ -5,6 +5,8 @@ import (
 	"flag"
 	"fmt"
 	"os"
+
+	"github.com/ready-steady/sequence"
 )
 
 var (
@@ -24,7 +26,8 @@ func main() {
 	target := newTarget(config)
 	algorithm := newAlgorithm(config)
 	surrogate := algorithm.Compute(target)
-	fmt.Printf("Surrogate: %s\n", surrogate)
+	points := sequence.NewSobol(target.ni, config.Seed).Next(config.Samples)
+	_ = algorithm.Evaluate(surrogate, points)
 }
 
 func abort(err error) {

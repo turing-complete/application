@@ -18,6 +18,9 @@ type Config struct {
 	AbsoluteError float64
 	RelativeError float64
 	ScoreError    float64
+
+	Seed    int64
+	Samples uint
 }
 
 func newConfig(path string) (*Config, error) {
@@ -53,5 +56,8 @@ func defaultConfig() *Config {
 		AbsoluteError: 1e-3,
 		RelativeError: 1e-2,
 		ScoreError:    1e-4,
+
+		Seed:    0x0102030405060708,
+		Samples: 10000,
 	}
 }
