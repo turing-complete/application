@@ -8,24 +8,24 @@ import (
 )
 
 var (
-	configFile = flag.String("c", "", "a configuration file (required)")
+	configPath = flag.String("c", "", "a configuration file (required)")
 )
 
 func main() {
 	flag.Usage = usage
 	flag.Parse()
-
-	if len(*configFile) == 0 {
+	if len(*configPath) == 0 {
 		fail(errors.New("expected a configuration file"))
 	}
-	config, err := newConfig(*configFile)
+	config, err := newConfig(*configPath)
 	if err != nil {
 		fail(err)
 	}
-	if len(config.Target) == 0 {
-		fail(errors.New("expected a target command"))
+	target, err := newTarget(config)
+	if err != nil {
+		fail(err)
 	}
-	fmt.Printf("Target: %s\n", config.Target)
+	target.evaluate(make([]float64, target.ni))
 }
 
 func fail(err error) {

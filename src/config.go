@@ -6,7 +6,9 @@ import (
 )
 
 type Config struct {
-	Target string
+	Inputs  uint
+	Outputs uint
+	Command string
 }
 
 func newConfig(path string) (*Config, error) {
@@ -15,9 +17,16 @@ func newConfig(path string) (*Config, error) {
 		return nil, err
 	}
 	defer file.Close()
-	config := &Config{}
+	config := defaultConfig()
 	if err = json.NewDecoder(file).Decode(config); err != nil {
 		return nil, err
 	}
 	return config, nil
+}
+
+func defaultConfig() *Config {
+	return &Config{
+		Inputs:  1,
+		Outputs: 1,
+	}
 }
