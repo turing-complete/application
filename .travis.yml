@@ -13,8 +13,8 @@ install:
   - (cd $GOPATH/src/github.com/ready-steady/hdf5 && make install)
 
 script:
-  - make build
-  - make test
+  - go test ./...
+  - make -C build
 
 notifications:
   email: false
