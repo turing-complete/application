@@ -6,7 +6,7 @@ go:
 
 cache:
   directories:
-    - $GOPATH/src/github.com/ready-steady
+    - $GOPATH/src/github.com/ready-steady/hdf5
 
 install:
   - go get -d -t ./...
