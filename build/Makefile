@@ -19,11 +19,11 @@ clean: flush
 	@rm -f ${executable}
 
 flush:
-	@rm -f "${output}"/*.h5
+	@rm -rf "${output}/${problem}"*
 
-${problem}: "${output}/${problem}.h5"
+${problem}: ${output}/${problem}.h5
 
-"${output}/%.h5": ${executable}
+${output}/%.h5: ${executable}
 	@./$< -c "${input}/$*.json" -o "$@"
 
 ${executable}: ${dependencies}
