@@ -16,7 +16,7 @@ function has() {
 }
 
 if ! has vips; then
-  die 'vips should be installed'
+  die 'expected vips to be installed'
 fi
 
 if [ "$#" -ne 1 ] && [ "$#" -ne 2 ]; then
