@@ -15,8 +15,12 @@ function has() {
   fi
 }
 
+if ! has sqlite3; then
+  die 'expected SQLite to be installed'
+fi
+
 if ! has vips; then
-  die 'expected vips to be installed'
+  die 'expected VIPS to be installed'
 fi
 
 if [ "$#" -ne 1 ] && [ "$#" -ne 2 ]; then
@@ -47,4 +51,13 @@ if [ ! -e "${output}/${program}.png" ]; then
   vips resize "${input}/${problem}.png" "${output}/${program}.png" "${x}" --vscale "${y}"
 fi
 
-echo $@
+if [ ! -e "${output}/${program}.sqlite3" ]; then
+  query="""
+    CREATE TABLE ``dynamic`` (``dynamic_power`` REAL);
+    INSERT INTO ``dynamic`` VALUES (${x});
+  """
+  echo "${query}" | sqlite3 "${output}/${program}.sqlite3"
+fi
+
+query='SELECT 1e-3 * SUM(`dynamic_power`) FROM `dynamic`;'
+echo "${query}" | sqlite3 "${output}/${program}.sqlite3"
