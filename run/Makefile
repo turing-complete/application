@@ -1,6 +1,6 @@
 root := $(dir $(shell pwd))
 
-executable := explorer
+executable := example
 dependencies := $(shell find $(root)src -name '*.go')
 
 export GOMAXPROCS=1
