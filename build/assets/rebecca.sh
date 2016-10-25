@@ -15,6 +15,14 @@ function has() {
   fi
 }
 
+if [ -z "${BENCHMARKS_ROOT}" ]; then
+  die 'BENCHMARKS_ROOT should be defined'
+fi
+
+if [ -z "${STUDIO_ROOT}" ]; then
+  die 'STUDIO_ROOT should be defined'
+fi
+
 if ! has sqlite3; then
   die 'expected SQLite to be installed'
 fi
@@ -34,30 +42,43 @@ if [ "$#" -eq 2 ]; then
   y="${2}"
 fi
 
-root="$(dirname "$(dirname "${BASH_SOURCE[0]}")")"
+root="$(cd "$(dirname "$(dirname "${BASH_SOURCE[0]}")")" && pwd)"
 input="${root}/assets"
 output="${root}/results"
 
 problem="$(basename "${BASH_SOURCE[0]}")"
 problem="${problem%.*}"
+scenario="${problem}-${x}x${y}"
 
-suffix="${x}-${y}"
-program="${problem}-${suffix}"
-output="${output}/${program}"
+mkdir -p "${output}/${scenario}"
 
-mkdir -p "${output}"
-
-if [ ! -e "${output}/${program}.png" ]; then
-  vips resize "${input}/${problem}.png" "${output}/${program}.png" "${x}" --vscale "${y}"
+picture="${output}/${scenario}/${problem}.v"
+if [ ! -e "${picture}" ]; then
+  vips resize "${input}/${problem}.tif" "${picture}" "${x}" --vscale "${y}"
 fi
 
-if [ ! -e "${output}/${program}.sqlite3" ]; then
-  query="""
-    CREATE TABLE ``dynamic`` (``dynamic_power`` REAL);
-    INSERT INTO ``dynamic`` VALUES (${x});
-  """
-  echo "${query}" | sqlite3 "${output}/${program}.sqlite3"
+input_size="sim${x}x${y}"
+program="parsec-vips-${input_size}"
+parsec="${BENCHMARKS_ROOT}/parsec/parsec-2.1"
+
+echo """#!/bin/bash
+run_desc='Cursom input for performance analysis with simulators (${input_size})'
+""" > "${parsec}/config/${input_size}.runconf"
+
+echo """#!/bin/bash
+run_exec='bin/vips'
+export IM_CONCURRENCY=\${NTHREADS}
+run_args='im_benchmark \"${picture}\" output.v'
+""" > "${parsec}/pkgs/apps/vips/parsec/${input_size}.runconf"
+
+if [ ! -e "${output}/${scenario}/.${program}" ]; then
+  OUTPUT_DIR="${output}/${scenario}" make -C "${STUDIO_ROOT}" \
+    setup "record-${program}" 2>&1 > "${output}/${scenario}/${program}.log"
+fi
+
+if [ ! -e "${output}/${scenario}/.${program}" ]; then
+  die 'failed to simulate'
 fi
 
 query='SELECT 1e-3 * SUM(`dynamic_power`) FROM `dynamic`;'
-echo "${query}" | sqlite3 "${output}/${program}.sqlite3"
+echo "${query}" | sqlite3 "${output}/${scenario}/${program}.sqlite3"
