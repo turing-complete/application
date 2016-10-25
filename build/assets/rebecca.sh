@@ -61,7 +61,8 @@ mkdir -p "${output}/${scenario}"
 
 picture="${output}/${scenario}/${problem}.v"
 if [ ! -e "${picture}" ]; then
-  vips resize "${input}/${problem}.tif" "${picture}" "${x}" --vscale "${y}"
+  vips resize "${input}/${problem}.tif" "${picture}.v" "${x}" --vscale "${y}"
+  vips im_Lab2LabQ "${picture}.v" "${picture}"
 fi
 
 input_size="sim${x}x${y}"
