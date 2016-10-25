@@ -15,11 +15,8 @@ build: ${executable}
 test:
 	@cd "${source}" && go test ./...
 
-clean: flush
+clean:
 	@rm -f ${executable}
-
-flush:
-	@rm -rf "${output}/${problem}"*
 
 ${problem}: ${output}/${problem}.h5
 
@@ -29,4 +26,4 @@ ${output}/%.h5: ${executable}
 ${executable}: ${dependencies}
 	@cd "${source}" && go build -o "${build}/$@"
 
-.PHONY: build test clean flush ${problem}
+.PHONY: build test clean ${problem}
