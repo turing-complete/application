@@ -23,6 +23,10 @@ if [ -z "${STUDIO_ROOT}" ]; then
   die 'STUDIO_ROOT should be defined'
 fi
 
+if ! has bc; then
+  die 'expected bc to be installed'
+fi
+
 if ! has sqlite3; then
   die 'expected SQLite to be installed'
 fi
@@ -41,6 +45,9 @@ y="${1}"
 if [ "$#" -eq 2 ]; then
   y="${2}"
 fi
+
+x="$(printf '%.8f' "$(echo 1.0 + "${x}" | bc)")"
+y="$(printf '%.8f' "$(echo 1.0 + "${y}" | bc)")"
 
 root="$(cd "$(dirname "$(dirname "${BASH_SOURCE[0]}")")" && pwd)"
 input="${root}/assets"
