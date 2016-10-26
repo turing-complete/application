@@ -25,7 +25,7 @@ func newTarget(config *Config) *Target {
 func (self *Target) Compute(z, u []float64) error {
 	inputs := make([]string, self.ni)
 	for i := uint(0); i < self.ni; i++ {
-		inputs[i] = fmt.Sprintf("%.8f", z[i])
+		inputs[i] = fmt.Sprintf("%.10f", z[i])
 	}
 	bytes, err := exec.Command(self.name, inputs...).Output()
 	if err != nil {

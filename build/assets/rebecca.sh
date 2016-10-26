@@ -46,8 +46,8 @@ if [ "$#" -eq 2 ]; then
   y="${2}"
 fi
 
-x="$(printf '%.8f' "$(echo 1.0 + "${x}" | bc)")"
-y="$(printf '%.8f' "$(echo 1.0 + "${y}" | bc)")"
+x="$(printf '%.10f' "$(echo 1.0 + "${x}" | bc)")"
+y="$(printf '%.10f' "$(echo 1.0 + "${y}" | bc)")"
 
 root="$(cd "$(dirname "$(dirname "${BASH_SOURCE[0]}")")" && pwd)"
 input="${root}/assets"
