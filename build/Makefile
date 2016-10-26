@@ -8,8 +8,6 @@ executable := example
 problem := rebecca
 dependencies := $(shell find "${source}" -name '*.go')
 
-export GOMAXPROCS=1
-
 build: ${executable}
 
 test:
