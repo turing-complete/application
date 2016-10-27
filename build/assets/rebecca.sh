@@ -79,14 +79,18 @@ export IM_CONCURRENCY=\${NTHREADS}
 run_args='im_benchmark \"${picture}\" output.v'
 """ > "${parsec}/pkgs/apps/vips/parsec/${input_size}.runconf"
 
-if [ ! -e "${output}/${scenario}/.${program}" ]; then
+finished="${output}/${scenario}/.${program}"
+database="${output}/${scenario}/${program}.sqlite3"
+query='SELECT 1e-3 * SUM(`dynamic_power`) FROM `dynamic`;'
+
+if [ ! -e "${finished}" ]; then
+  rm -f "${database}"
   OUTPUT_DIR="${output}/${scenario}" make -C "${STUDIO_ROOT}" \
     setup "record-${program}" 2>&1 > "${output}/${scenario}/${program}.log"
 fi
 
-if [ ! -e "${output}/${scenario}/.${program}" ]; then
+if [ ! -e "${finished}" ] || [ ! -e "${database}" ]; then
   die 'failed to simulate'
 fi
 
-query='SELECT 1e-3 * SUM(`dynamic_power`) FROM `dynamic`;'
-echo "${query}" | sqlite3 "${output}/${scenario}/${program}.sqlite3"
+echo "${query}" | sqlite3 "${database}"
