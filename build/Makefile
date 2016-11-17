@@ -4,7 +4,7 @@ build := ${root}/build
 input := ${build}/assets
 output := ${build}/results
 
-executable := example
+executable := application
 problem := rebecca
 dependencies := $(shell find "${source}" -name '*.go')
 
