@@ -33,7 +33,7 @@ func newAlgorithm(config *Config) *Algorithm {
 }
 
 func (self *Algorithm) Compute(target *Target) *Surrogate {
-	log.Printf("[Algorithm] Start constructing with %d input(s) and output %d (s).\n",
+	log.Printf("[Algorithm] Start constructing with %d input(s) and %d output(s).\n",
 		target.ni, target.no)
 	compute := func(z, u []float64) {
 		log.Printf("[Target] Start computing at node %v.\n", z)
